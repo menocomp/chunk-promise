@@ -1,13 +1,13 @@
-# PromiseAll
+# chunk-promise
 
-promiseAll is a tiny library used to run a list of native promises in chunks.
+chunk-promise is a tiny library used to run a list of native promises in chunks.
 
-You may decide how many concurrent promises to run in parallel.
+You can decide how many concurrent promises to run in parallel.
 
 ## How to use
 
 ```
-npm install promiseall
+npm install chunk-promise
 ```
 
 ## Examples
@@ -27,12 +27,12 @@ Or....
 You can use this library :)
 
 ```
-const { promiseAll } = require("promiseall");
+const { chunkPromise } = require("chunk-promise");
 
-promiseAll(promiseArr, { concurrent: 2 });
+chunkPromise(promiseArr, { concurrent: 2 });
 ```
 
-PromiseAll also accpet extra params other than `concurrent` like: 
+`chunk-promise` also accepts extra params other than `concurrent` like: 
 
 `sleep` => this will cause a sleep after every chunk is processed.
 
