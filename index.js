@@ -4,7 +4,7 @@ const sleepFn = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const recursivePromiseChunk = chunk => res => Promise.all([...res, ...chunk]);
 
-const promiseAll = (
+const chunkPromise = (
   promiseArr,
   { concurrent = Infinity, sleep, callback } = {}
 ) => {
@@ -28,4 +28,4 @@ const promiseAll = (
   return promiseChain;
 };
 
-exports = module.exports = { promiseAll };
+exports = module.exports = { chunkPromise };

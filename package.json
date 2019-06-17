@@ -1,5 +1,5 @@
 {
-  "name": "promiseall",
+  "name": "chunk-promise",
   "version": "1.0.0",
   "description": "run promises in chunks",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/menocomp/promiseall.git"
+    "url": "git+https://github.com/menocomp/chunk-promise.git"
   },
   "keywords": [
     "promise.all",
@@ -19,9 +19,9 @@
     "chunks"
   ],
   "author": "Mina Luke",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/menocomp/promiseall/issues"
+    "url": "https://github.com/menocomp/chunk-promise/issues"
   },
-  "homepage": "https://github.com/menocomp/promiseall#readme"
+  "homepage": "https://github.com/menocomp/chunk-promise#readme"
 }
