@@ -1,0 +1,27 @@
+{
+  "name": "promiseall",
+  "version": "1.0.0",
+  "description": "run promises in chunks",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/menocomp/promiseall.git"
+  },
+  "keywords": [
+    "promise.all",
+    "promise",
+    "chunks"
+  ],
+  "author": "Mina Luke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/menocomp/promiseall/issues"
+  },
+  "homepage": "https://github.com/menocomp/promiseall#readme"
+}
