@@ -37,13 +37,14 @@ npm install chunk-promise
 ```
 
 ## Available promise customizations
-| Option        | Required? | Description| Default value |
-| ------------- |-------------|-----------|-|
-| **concurrent**| No |Number of concurrent promises to run in a single chunk | Infinity
-| **sleepMs**      |  No | Sleep function between chunks in milliseconds | undefined
-| **callback** | No | callback async function to be called after every single chunk      | undefined
-| **promiseFlavor** | No  | choose between Promise.all and Promise.allSettled | Promise.all
-| **logMe** | No | log what will be running | false
+
+| Option            | Required? | Description                                                   | Default value |
+| ----------------- | --------- | ------------------------------------------------------------- | ------------- |
+| **concurrent**    | No        | Number of concurrent promises to run in a single chunk        | Infinity      |
+| **sleepMs**       | No        | Sleep function between chunks in milliseconds                 | undefined     |
+| **callback**      | No        | callback async function to be called after every single chunk | undefined     |
+| **promiseFlavor** | No        | choose between Promise.all and Promise.allSettled             | Promise.all   |
+| **logMe**         | No        | log what will be running                                      | false         |
 
 ## Examples
 
@@ -63,7 +64,9 @@ const promiseArr = [
 chunkPromise(promiseArr, {
   concurrent: 2,
   promiseFlavor: PromiseFlavor.PromiseAll
-});
+})
+  .then(res => {})
+  .catch(err => {});
 ```
 
 ### 2. Run list of promises in chunks using `Promise.allSettled`
@@ -82,7 +85,7 @@ const promiseArr = [
 chunkPromise(promiseArr, {
   concurrent: 2,
   promiseFlavor: PromiseFlavor.PromiseAllSettled
-});
+}).then(res => {});
 ```
 
 ### 3. Run list of promises in chunks using `Promise.all` and slow down by sleeping for 2 seconds between chunks.
@@ -102,7 +105,9 @@ chunkPromise(promiseArr, {
   concurrent: 2,
   promiseFlavor: PromiseFlavor.PromiseAll,
   sleepMs: 2000
-});
+})
+  .then(res => {})
+  .catch(err => {});
 ```
 
 ### 4. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
@@ -120,7 +125,7 @@ const promiseArr = [
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseFlavor: PromiseFlavor.PromiseAll,
+  promiseFlavor: PromiseFlavor.PromiseAllSettled,
   callback: (chunkResults, index, allResults) => {
     if (chunkResults.some(p => p.status === 'fulfilled')) {
       console.log(`chunk (${index}): has success results`);
@@ -128,7 +133,7 @@ chunkPromise(promiseArr, {
       console.log(`chunk (${index}): has no success results`);
     }
   }
-});
+}).then(res => {});
 ```
 
 ### 5. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
@@ -146,7 +151,7 @@ const promiseArr = [
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseFlavor: PromiseFlavor.PromiseAll,
+  promiseFlavor: PromiseFlavor.PromiseAllSettled,
   callback: (chunkResults, index, allResults) => {
     if (chunkResults.some(p => p.status === 'fulfilled')) {
       console.log(`chunk (${index}): has success results`);
@@ -154,19 +159,23 @@ chunkPromise(promiseArr, {
       console.log(`chunk (${index}): has no success results`);
     }
   }
-});
+}).then(res => {});
 ```
 
-### 6. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk to force stop the promise chain.
+### 6. Run list of promises in chunks using `Promise.all` and run a callback function after every chunk and force stop the promise chain.
 
 ```javascript
-const { chunkPromise, PromiseFlavor, ChunkPromiseCallbackForceStopError } = require('chunk-promise');
+const {
+  chunkPromise,
+  PromiseFlavor,
+  ChunkPromiseCallbackForceStopError
+} = require('chunk-promise');
 
 const promiseArr = [
   () => Promise.resolve(1),
-  () => Promise.reject(2),
+  () => Promise.resolve(2),
   () => Promise.resolve(3),
-  () => Promise.reject(4),
+  () => Promise.resolve(4),
   () => Promise.resolve(5)
 ];
 
@@ -182,18 +191,16 @@ chunkPromise(promiseArr, {
     }
   }
 })
-  .then(res => {
-    console.log('success');
-    console.log(res);
-  })
+  .then(res => {})
   .catch(err => {
     if (err instanceof ChunkPromiseCallbackForceStopError) {
       console.log('Force stop');
     } else {
       console.log('failed');
-      console.log(err);
     }
   });
 ```
+
 ## Any suggestions?
+
 Please do not hesitate to report any issue/improvement if you want to add more options/customizations to this library.
