@@ -1,6 +1,6 @@
 {
   "name": "chunk-promise",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "run promises in chunks",
   "main": "index.js",
   "directories": {

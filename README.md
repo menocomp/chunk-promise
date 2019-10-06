@@ -41,7 +41,7 @@ npm install chunk-promise
 | ------------- |-------------|-----------|-|
 | **concurrent**| No |Number of concurrent promises to run in a single chunk | Infinity
 | **sleepMs**      |  No | Sleep function between chunks in milliseconds | undefined
-| **callback** | No | callback to be called after every single chunk      | undefined
+| **callback** | No | callback async function to be called after every single chunk      | undefined
 | **promiseFlavor** | No  | choose between Promise.all and Promise.allSettled | Promise.all
 | **logMe** | No | log what will be running | false
 
@@ -50,6 +50,8 @@ npm install chunk-promise
 ### 1. Run list of promises in chunks using `Promise.all`
 
 ```javascript
+const { chunkPromise, PromiseFlavor } = require('chunk-promise');
+
 const promiseArr = [
   () => Promise.resolve(1),
   () => Promise.reject(2),
@@ -57,8 +59,6 @@ const promiseArr = [
   () => Promise.reject(4),
   () => Promise.resolve(5)
 ];
-
-const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
@@ -69,6 +69,8 @@ chunkPromise(promiseArr, {
 ### 2. Run list of promises in chunks using `Promise.allSettled`
 
 ```javascript
+const { chunkPromise, PromiseFlavor } = require('chunk-promise');
+
 const promiseArr = [
   () => Promise.resolve(1),
   () => Promise.reject(2),
@@ -76,8 +78,6 @@ const promiseArr = [
   () => Promise.reject(4),
   () => Promise.resolve(5)
 ];
-
-const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
@@ -88,6 +88,8 @@ chunkPromise(promiseArr, {
 ### 3. Run list of promises in chunks using `Promise.all` and slow down by sleeping for 2 seconds between chunks.
 
 ```javascript
+const { chunkPromise, PromiseFlavor } = require('chunk-promise');
+
 const promiseArr = [
   () => Promise.resolve(1),
   () => Promise.reject(2),
@@ -95,8 +97,6 @@ const promiseArr = [
   () => Promise.reject(4),
   () => Promise.resolve(5)
 ];
-
-const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
@@ -108,6 +108,8 @@ chunkPromise(promiseArr, {
 ### 4. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
 
 ```javascript
+const { chunkPromise, PromiseFlavor } = require('chunk-promise');
+
 const promiseArr = [
   () => Promise.resolve(1),
   () => Promise.reject(2),
@@ -115,8 +117,6 @@ const promiseArr = [
   () => Promise.reject(4),
   () => Promise.resolve(5)
 ];
-
-const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
@@ -134,6 +134,8 @@ chunkPromise(promiseArr, {
 ### 5. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
 
 ```javascript
+const { chunkPromise, PromiseFlavor } = require('chunk-promise');
+
 const promiseArr = [
   () => Promise.resolve(1),
   () => Promise.reject(2),
@@ -141,8 +143,6 @@ const promiseArr = [
   () => Promise.reject(4),
   () => Promise.resolve(5)
 ];
-
-const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
@@ -160,6 +160,8 @@ chunkPromise(promiseArr, {
 ### 6. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk to force stop the promise chain.
 
 ```javascript
+const { chunkPromise, PromiseFlavor, ChunkPromiseCallbackForceStopError } = require('chunk-promise');
+
 const promiseArr = [
   () => Promise.resolve(1),
   () => Promise.reject(2),
@@ -167,8 +169,6 @@ const promiseArr = [
   () => Promise.reject(4),
   () => Promise.resolve(5)
 ];
-
-const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
