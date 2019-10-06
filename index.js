@@ -4,31 +4,38 @@ const { identity, compose } = require('./combinators');
 
 const promiseChainLog = [];
 
-const recursivePromiseChunk = (chunk) => (res) => {
-  return Promise.all([...res, ...chunk]);
-};
+const recursivePromiseChunk = chunk => res => Promise.all([...res, ...chunk]);
 
 const chainChunks = (promiseChain, index, chunks, promiseLogic) => {
-  const runFn =
-    promiseLogic === PromiseLogic.PromiseAllSettled
-      ? compose(reflect)(identity)
-      : identity;
+  let runFn, runFnStr;
+  const tab = '\t';
+
+  if (promiseLogic === PromiseLogic.PromiseAllSettled) {
+    runFn = compose(reflect)(identity);
+    runFnStr = `f => 
+    ${tab.repeat(2)}f()
+    ${tab.repeat(3)}.then(value => ({ status: 'fulfilled', value }))
+    ${tab.repeat(3)}.catch(reason => ({ status: "rejected", reason }))`;
+  } else {
+    runFn = identity;
+    runFnStr = `f => f()`;
+  }
 
   if (index === 0) {
     promiseChain = Promise.all(chunks[0].map(runFn));
     promiseChainLog.push(
-      `Promise.all( [ ${chunks[0].join(', ')} ].map(f => f()) )`,
+      `Promise.all( [ ${chunks[0].join(', ')} ]
+      ${tab.repeat(1)}.map(${runFnStr})
+      )`
     );
   } else {
-    promiseChain = promiseChain.then((res) =>
-      recursivePromiseChunk(chunks[index].map(runFn))(res),
+    promiseChain = promiseChain.then(res =>
+      recursivePromiseChunk(chunks[index].map(runFn))(res)
     );
     promiseChainLog.push(
-      `.then((res) => {
-        \treturn Promise.all( [ ...res, ...[ ${chunks[index].join(
-          ', ',
-        )} ].map(f => f()) ] )
-        })`,
+      `.then((res) => Promise.all( [ ...res, ...[ ${chunks[index].join(', ')} ]
+      ${tab.repeat(1)}.map(${runFnStr})
+      ]))`
     );
   }
   return promiseChain;
@@ -36,30 +43,33 @@ const chainChunks = (promiseChain, index, chunks, promiseLogic) => {
 
 const chainCallback = (promiseChain, index, chunks, callback) => {
   if (callback) {
-    promiseChain = promiseChain.then((res) => {
+    promiseChain = promiseChain.then(res => {
       return callback(res.slice(-chunks[index].length), index, res).then(
-        () => res,
+        () => res
       );
     });
     promiseChainLog.push(
       `.then((res) => {
-      \t\treturn callback(res, ${index}).then(() => res);
-        })`,
+      \t\treturn callback(chunkResults, ${index}, allResults).then(() => res);
+        })`
     );
   }
   return promiseChain;
 };
 
-const chainSleep = (promiseChain, index, sleepMs) => {
+const chainSleep = (promiseChain, sleepMs) => {
   if (sleepMs !== undefined) {
     promiseChain = promiseChain.then(sleep(sleepMs));
+    promiseChainLog.push(
+      `.then((res) => new Promise(resolve => setTimeout(() => resolve(res), ${sleepMs})))`
+    );
   }
   return promiseChain;
 };
 
 const PromiseLogic = {
   PromiseAll: 'PromiseAll',
-  PromiseAllSettled: 'PromiseAllSettled',
+  PromiseAllSettled: 'PromiseAllSettled'
 };
 
 const chunkPromise = (
@@ -69,8 +79,8 @@ const chunkPromise = (
     sleepMs,
     callback,
     promiseLogic = PromiseLogic.PromiseAll,
-    logMe = false,
-  } = {},
+    logMe = false
+  } = {}
 ) => {
   const chunks = chunk(promiseArr, concurrent);
 
@@ -81,10 +91,16 @@ const chunkPromise = (
 
     promiseChain = chainCallback(promiseChain, index, chunks, callback);
 
-    promiseChain = chainSleep(promiseChain, index, sleepMs);
+    promiseChain = chainSleep(promiseChain, sleepMs);
   }
-  logMe && console.log(promiseChainLog.join('\n\t'));
+  logMe && console.log(promiseChainLog.join('\n'));
   return promiseChain;
 };
 
-exports = module.exports = { chunkPromise, PromiseLogic };
+const ChunkPromiseCallbackForceStopError = class extends Error {};
+
+exports = module.exports = {
+  chunkPromise,
+  PromiseLogic,
+  ChunkPromiseCallbackForceStopError
+};
