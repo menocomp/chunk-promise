@@ -116,7 +116,7 @@ chunkPromise(promiseArr, {
 const { chunkPromise, PromiseFlavor } = require('chunk-promise');
 
 const promiseArr = [
-  () => Promise.resolve(1),
+  () => Promise.reject(1),
   () => Promise.reject(2),
   () => Promise.resolve(3),
   () => Promise.reject(4),
@@ -126,7 +126,7 @@ const promiseArr = [
 chunkPromise(promiseArr, {
   concurrent: 2,
   promiseFlavor: PromiseFlavor.PromiseAllSettled,
-  callback: (chunkResults, index, allResults) => {
+  callback: async (chunkResults, index, allResults) => {
     if (chunkResults.some(p => p.status === 'fulfilled')) {
       console.log(`chunk (${index}): has success results`);
     } else {
@@ -144,7 +144,7 @@ const { chunkPromise, PromiseFlavor } = require('chunk-promise');
 const promiseArr = [
   () => Promise.resolve(1),
   () => Promise.reject(2),
-  () => Promise.resolve(3),
+  () => Promise.reject(3),
   () => Promise.reject(4),
   () => Promise.resolve(5)
 ];
@@ -152,7 +152,7 @@ const promiseArr = [
 chunkPromise(promiseArr, {
   concurrent: 2,
   promiseFlavor: PromiseFlavor.PromiseAllSettled,
-  callback: (chunkResults, index, allResults) => {
+  callback: async (chunkResults, index, allResults) => {
     if (chunkResults.some(p => p.status === 'fulfilled')) {
       console.log(`chunk (${index}): has success results`);
     } else {
@@ -182,7 +182,7 @@ const promiseArr = [
 chunkPromise(promiseArr, {
   concurrent: 2,
   promiseFlavor: PromiseFlavor.PromiseAll,
-  callback: (chunkResults, index, allResults) => {
+  callback: async (chunkResults, index, allResults) => {
     console.log(`chunk (${index}): has success results`);
     if (index === 1) {
       throw new ChunkPromiseCallbackForceStopError(
