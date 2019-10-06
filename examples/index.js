@@ -1,6 +1,6 @@
 const {
   chunkPromise,
-  PromiseLogic,
+  PromiseFlavor,
   ChunkPromiseCallbackForceStopError
 } = require('..');
 
@@ -35,8 +35,8 @@ chunkPromise(promiseArr, {
   concurrent: 2,
   sleepMs: 2000,
   callback: promiseAllCallback,
-  promiseLogic: PromiseLogic.PromiseAll
-  // logMe: true
+  promiseFlavor: PromiseFlavor.PromiseAll,
+  logMe: true
 })
   .then(res => {
     console.log('success');

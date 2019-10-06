@@ -1,6 +1,6 @@
 {
   "name": "chunk-promise",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "run promises in chunks",
   "main": "index.js",
   "directories": {
@@ -15,8 +15,10 @@
   },
   "keywords": [
     "promise.all",
+    "promise.allSettled",
     "promise",
-    "chunks"
+    "chunks",
+    "patches"
   ],
   "author": "Mina Luke",
   "license": "MIT",

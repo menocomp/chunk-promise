@@ -22,7 +22,7 @@ Well, it depends. native promises and async/await are definitely doing great how
 
 - If you want to run promises in chunks with both `Promise.all` and `Promise.allSettled` flavors where every single chunk runs (n) number of promises in parallel.
 
-- If you want to slow down the execution by introducing sleep/timeout function.
+- If you want to slow down the execution by introducing sleep/timeout function between chunks.
 
 - If you want to receive a notification after every single chunk.
 
@@ -42,12 +42,12 @@ npm install chunk-promise
 | **concurrent**| No |Number of concurrent promises to run in a single chunk | Infinity
 | **sleepMs**      |  No | Sleep function between chunks in milliseconds | undefined
 | **callback** | No | callback to be called after every single chunk      | undefined
-| **promiseLogic** | No  | choose between Promise.all and Promise.allSettled | Promise.all
-| **logMe** | true | log what will be running | false
+| **promiseFlavor** | No  | choose between Promise.all and Promise.allSettled | Promise.all
+| **logMe** | No | log what will be running | false
 
 ## Examples
 
-1.  Run list of promises in chunks using `Promise.all`
+### 1. Run list of promises in chunks using `Promise.all`
 
 ```javascript
 const promiseArr = [
@@ -62,11 +62,11 @@ const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseLogic: PromiseLogic.PromiseAll
+  promiseFlavor: PromiseFlavor.PromiseAll
 });
 ```
 
-2.  Run list of promises in chunks using `Promise.allSettled`
+### 2. Run list of promises in chunks using `Promise.allSettled`
 
 ```javascript
 const promiseArr = [
@@ -81,11 +81,11 @@ const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseLogic: PromiseLogic.PromiseAllSettled
+  promiseFlavor: PromiseFlavor.PromiseAllSettled
 });
 ```
 
-3.  Run list of promises in chunks using `Promise.all` and slow down by sleeping for 2 seconds between chunks.
+### 3. Run list of promises in chunks using `Promise.all` and slow down by sleeping for 2 seconds between chunks.
 
 ```javascript
 const promiseArr = [
@@ -100,12 +100,12 @@ const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseLogic: PromiseLogic.PromiseAll,
+  promiseFlavor: PromiseFlavor.PromiseAll,
   sleepMs: 2000
 });
 ```
 
-4.  Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
+### 4. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
 
 ```javascript
 const promiseArr = [
@@ -120,7 +120,7 @@ const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseLogic: PromiseLogic.PromiseAll,
+  promiseFlavor: PromiseFlavor.PromiseAll,
   callback: (chunkResults, index, allResults) => {
     if (chunkResults.some(p => p.status === 'fulfilled')) {
       console.log(`chunk (${index}): has success results`);
@@ -131,7 +131,7 @@ chunkPromise(promiseArr, {
 });
 ```
 
-5.  Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
+### 5. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk.
 
 ```javascript
 const promiseArr = [
@@ -146,7 +146,7 @@ const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseLogic: PromiseLogic.PromiseAll,
+  promiseFlavor: PromiseFlavor.PromiseAll,
   callback: (chunkResults, index, allResults) => {
     if (chunkResults.some(p => p.status === 'fulfilled')) {
       console.log(`chunk (${index}): has success results`);
@@ -157,7 +157,7 @@ chunkPromise(promiseArr, {
 });
 ```
 
-6.  Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk to force stop the promise chain.
+### 6. Run list of promises in chunks using `Promise.allSettled` and run a callback function after every chunk to force stop the promise chain.
 
 ```javascript
 const promiseArr = [
@@ -172,7 +172,7 @@ const { chunkPromise } = require('chunk-promise');
 
 chunkPromise(promiseArr, {
   concurrent: 2,
-  promiseLogic: PromiseLogic.PromiseAll,
+  promiseFlavor: PromiseFlavor.PromiseAll,
   callback: (chunkResults, index, allResults) => {
     console.log(`chunk (${index}): has success results`);
     if (index === 1) {
@@ -196,4 +196,4 @@ chunkPromise(promiseArr, {
   });
 ```
 ## Any suggestions?
-Please do not hesitate to report an issue/improvement if you want to add more options/customizations to this library.
+Please do not hesitate to report any issue/improvement if you want to add more options/customizations to this library.

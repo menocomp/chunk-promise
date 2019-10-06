@@ -6,11 +6,11 @@ const promiseChainLog = [];
 
 const recursivePromiseChunk = chunk => res => Promise.all([...res, ...chunk]);
 
-const chainChunks = (promiseChain, index, chunks, promiseLogic) => {
+const chainChunks = (promiseChain, index, chunks, promiseFlavor) => {
   let runFn, runFnStr;
   const tab = '\t';
 
-  if (promiseLogic === PromiseLogic.PromiseAllSettled) {
+  if (promiseFlavor === PromiseFlavor.PromiseAllSettled) {
     runFn = compose(reflect)(identity);
     runFnStr = `f => 
     ${tab.repeat(2)}f()
@@ -67,7 +67,7 @@ const chainSleep = (promiseChain, sleepMs) => {
   return promiseChain;
 };
 
-const PromiseLogic = {
+const PromiseFlavor = {
   PromiseAll: 'PromiseAll',
   PromiseAllSettled: 'PromiseAllSettled'
 };
@@ -78,7 +78,7 @@ const chunkPromise = (
     concurrent = Infinity,
     sleepMs,
     callback,
-    promiseLogic = PromiseLogic.PromiseAll,
+    promiseFlavor = PromiseFlavor.PromiseAll,
     logMe = false
   } = {}
 ) => {
@@ -87,7 +87,7 @@ const chunkPromise = (
   let promiseChain;
 
   for (let index = 0; index <= chunks.length - 1; index++) {
-    promiseChain = chainChunks(promiseChain, index, chunks, promiseLogic);
+    promiseChain = chainChunks(promiseChain, index, chunks, promiseFlavor);
 
     promiseChain = chainCallback(promiseChain, index, chunks, callback);
 
@@ -101,6 +101,6 @@ const ChunkPromiseCallbackForceStopError = class extends Error {};
 
 exports = module.exports = {
   chunkPromise,
-  PromiseLogic,
+  PromiseFlavor,
   ChunkPromiseCallbackForceStopError
 };
