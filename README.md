@@ -12,7 +12,7 @@ _What is `Promise.allSettled`? [see here](https://developer.mozilla.org/en-US/do
 
 Yes, there are lots of libraries that give you some control over promises.
 
-[blubird](https://github.com/petkaantonov/bluebird): This library does not use native promises, it is using its own version of promises.
+[bluebird](https://github.com/petkaantonov/bluebird): This library does not use native promises, it is using its own version of promises.
 
 [p-limit](https://github.com/sindresorhus/p-limit): It does use native promises but it neither support `Promise.allSettled` nor callbacks between chunks.
 
