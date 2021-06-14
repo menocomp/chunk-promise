@@ -84,7 +84,7 @@ const chunkPromise = (
 ) => {
   const chunks = chunk(promiseArr, concurrent);
 
-  let promiseChain;
+  let promiseChain = Promise.resolve();
 
   for (let index = 0; index <= chunks.length - 1; index++) {
     promiseChain = chainChunks(promiseChain, index, chunks, promiseFlavor);
